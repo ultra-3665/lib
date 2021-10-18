@@ -1,7 +1,7 @@
 
 local library = {
 	Version = 0.10,
-	WorkspaceName = "ultra-ware",
+	WorkspaceName = "configs",
 	flags = {},
 	signals = {},
 	objects = {},
@@ -145,25 +145,25 @@ local function resolveid(image, flag)
 							end
 						end)
 						codename = string.sub(codename, 1, 24) .. tostring(fixes)
-						local fold = isfolder("./Pepsi Lib")
+						local fold = isfolder("./ultra-ware")
 						if not fold then
-							makefolder("./Pepsi Lib")
+							makefolder("./ultra-ware")
 						end
-						fold = isfolder("./Pepsi Lib/Themes")
+						fold = isfolder("./ultra-ware/Themes")
 						if not fold then
-							makefolder("./Pepsi Lib/Themes")
+							makefolder("./ultra-ware/Themes")
 						end
-						fold = isfolder("./Pepsi Lib/Themes/SynapseAssetsCache")
+						fold = isfolder("./ultra-ware/Themes/SynapseAssetsCache")
 						if not fold then
-							makefolder("./Pepsi Lib Themes/SynapseAssetsCache")
+							makefolder("./ultra-ware Themes/SynapseAssetsCache")
 						end
-						if not fold or not isfile("./Pepsi Lib/Themes/SynapseAssetsCache/" .. codename .. ".dat") then
+						if not fold or not isfile("./ultra-ware/Themes/SynapseAssetsCache/" .. codename .. ".dat") then
 							local res = game:HttpGet(string.sub(image, 15))
 							if res ~= nil then
-								writefile("./Pepsi Lib/Themes/SynapseAssetsCache/" .. codename .. ".dat", res)
+								writefile("./ultra-ware/Themes/SynapseAssetsCache/" .. codename .. ".dat", res)
 							end
 						end
-						return getsynasset(readfile("./Pepsi Lib/Themes/SynapseAssetsCache/" .. codename .. ".dat"))
+						return getsynasset(readfile("./ultra-ware/Themes/SynapseAssetsCache/" .. codename .. ".dat"))
 					end)
 					if x and e ~= nil then
 						return e
@@ -613,7 +613,7 @@ function library:CreateWindow(options)
 	local windowoptions = options
 	local windowName = options.Name or "Unnamed Window"
 	options.Name = windowName
-	if windowName and #windowName > 0 and library.WorkspaceName == "Pepsi Lib" then
+	if windowName and #windowName > 0 and library.WorkspaceName == "ultra-ware" then
 		library.WorkspaceName = windowName
 	end
 	local pepsiLibrary = Instance_new("ScreenGui")
@@ -2948,14 +2948,14 @@ function library:CreateWindow(options)
 					local realDropdownHolder = Instance_new("ScrollingFrame")
 					local realDropdownHolderList = Instance_new("UIListLayout")
 					local dropdownEnabled = false
-					if not isfolder("./Pepsi Lib") then
-						makefolder("./Pepsi Lib")
+					if not isfolder("./ultra-ware") then
+						makefolder("./ultra-ware")
 					end
-					local common_string = "./Pepsi Lib/" .. tostring(custom_workspace or library.WorkspaceName)
+					local common_string = "./ultra-ware/" .. tostring(custom_workspace or library.WorkspaceName)
 					local function resolvelist()
 						if custom_workspace ~= options.Workspace then
 							custom_workspace = options.Workspace
-							common_string = "./Pepsi Lib/" .. tostring(custom_workspace or library.WorkspaceName)
+							common_string = "./ultra-ware/" .. tostring(custom_workspace or library.WorkspaceName)
 						end
 						if not isfolder or not makefolder or not listfiles then
 							return {}
@@ -4720,7 +4720,7 @@ function library:CreateWindow(options)
 			Name = "More Info"
 		})
 		local filessection = designer:CreateSection({
-			Name = "Profiles",
+			Name = "Settings",
 			Side = "right"
 		})
 		local settingssection = designer:CreateSection({
@@ -4780,19 +4780,12 @@ function library:CreateWindow(options)
 			Value = true,
 			Callback = updatecolors
 		}}, {"AddPersistence", "__Designer.Persistence.ThemeFile", filessection, {
-			Name = "Theme Profile",
+			Name = "Configs",
 			Flag = "__Designer.Files.ThemeFile",
 			Workspace = "themes",
 			Flags = flags,
 			Suffix = "Theme",
 			Desginer = true
-		}}, {"AddTextbox", "__Designer.Textbox.WorkspaceName", filessection, {
-			Name = "Workspace Name",
-			Value = library.WorkspaceName or "Unnamed Workspace",
-			Flag = "__Designer.Files.WorkspaceFile",
-			Callback = function(n, o)
-				persistoptions.Workspace = n or o
-			end
 		}}, {"AddPersistence", "__Designer.Persistence.WorkspaceProfile", filessection, persistoptions}, {"AddButton", "__Designer.Button.TerminateGUI", settingssection, {{
 			Name = "Terminate GUI",
 			Callback = library.unload
