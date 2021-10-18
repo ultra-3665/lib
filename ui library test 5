@@ -4779,14 +4779,6 @@ function library:CreateWindow(options)
 			Flag = "__Designer.Background.UseBackgroundImage",
 			Value = true,
 			Callback = updatecolors
-		}}, {"AddPersistence", "__Designer.Persistence.ThemeFile", filessection, {
-			Name = "Configs",
-			Flag = "__Designer.Files.ThemeFile",
-			Workspace = "themes",
-			Flags = flags,
-			Suffix = "Theme",
-			Desginer = true
-		}}, {"AddPersistence", "__Designer.Persistence.WorkspaceProfile", filessection, persistoptions}, {"AddButton", "__Designer.Button.TerminateGUI", settingssection, {{
 			Name = "Terminate GUI",
 			Callback = library.unload
 		}, {
