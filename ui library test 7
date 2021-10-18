@@ -1,7 +1,7 @@
 
 local library = {
 	Version = 0.10,
-	WorkspaceName = "configs",
+	WorkspaceName = "Settings",
 	flags = {},
 	signals = {},
 	objects = {},
