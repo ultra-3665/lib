@@ -149,21 +149,21 @@ local function resolveid(image, flag)
 						if not fold then
 							makefolder("./ultra-ware")
 						end
-						fold = isfolder("./ultra-ware/Configs")
+						fold = isfolder("./ultra-ware/Themes")
 						if not fold then
-							makefolder("./ultra-ware/Configs")
+							makefolder("./ultra-ware/Themes")
 						end
-						fold = isfolder("./ultra-ware/Configs/SynapseAssetsCache")
+						fold = isfolder("./ultra-ware/Themes/SynapseAssetsCache")
 						if not fold then
-							makefolder("./ultra-ware Configs/SynapseAssetsCache")
+							makefolder("./ultra-ware Themes/SynapseAssetsCache")
 						end
-						if not fold or not isfile("./ultra-ware/Configs/SynapseAssetsCache/" .. codename .. ".dat") then
+						if not fold or not isfile("./ultra-ware/Themes/SynapseAssetsCache/" .. codename .. ".dat") then
 							local res = game:HttpGet(string.sub(image, 15))
 							if res ~= nil then
-								writefile("./ultra-ware/Configs/SynapseAssetsCache/" .. codename .. ".dat", res)
+								writefile("./ultra-ware/Themes/SynapseAssetsCache/" .. codename .. ".dat", res)
 							end
 						end
-						return getsynasset(readfile("./ultra-ware/Configs/SynapseAssetsCache/" .. codename .. ".dat"))
+						return getsynasset(readfile("./ultra-ware/ThemesSynapseAssetsCache/" .. codename .. ".dat"))
 					end)
 					if x and e ~= nil then
 						return e
