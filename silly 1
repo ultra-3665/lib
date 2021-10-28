@@ -76,7 +76,7 @@ local circle = Drawingnew("Circle")
 circle.Transparency = Aiming.FovTransparency
 circle.Thickness = 2
 circle.Color = Aiming.FOVColour
-circle.Filled = false
+circle.Filled = true
 Aiming.FOVCircle = circle
 
 -- // Update
