@@ -46,7 +46,7 @@ getgenv().Aiming = {
 
     VisibleCheck = true,
 
-    FovTransparency = 5
+    FovTransparency = 5,
 
     HitChance = 100,
 
