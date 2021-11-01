@@ -39,24 +39,20 @@ getgenv().Aiming = {
 
     ShowFOV = false,
     FOV = 0,
-
     FOVSides = 64,
-    
-    FOVFilled = true,
-
-    FOVColour = Color3fromRGB(255, 255, 255),
+    FOVColour = Color3fromRGB(111, 247, 0),
 
     VisibleCheck = true,
-
+    
     HitChance = 100,
 
     Selected = nil,
-
     SelectedPart = nil,
 
     TargetPart = {"UpperTorso", "HumanoidRootPart"},
 
-    Ignored = {
+    Ignored = { LocalPlayer,
+                1763082305 
         Teams = {
             {
                 Team = LocalPlayer.Team,
@@ -73,10 +69,10 @@ local Aiming = getgenv().Aiming
 
 -- // Create circle
 local circle = Drawingnew("Circle")
-circle.Transparency = 9
-circle.Thickness = 2
+circle.Transparency = 0.90
+circle.Thickness = 2.22
 circle.Color = Aiming.FOVColour
-circle.Filled = Aiming.FOVFilled
+circle.Filled = false
 Aiming.FOVCircle = circle
 
 -- // Update
@@ -88,7 +84,7 @@ function Aiming.UpdateFOV()
 
     -- // Set Circle Properties
     circle.Visible = Aiming.ShowFOV
-    circle.Radius = (Aiming.FOV * 2)
+    circle.Radius = (Aiming.FOV * 2.22)
     circle.Position = Vector2new(Mouse.X, Mouse.Y + GetGuiInset(GuiService).Y)
     circle.NumSides = Aiming.FOVSides
     circle.Color = Aiming.FOVColour
