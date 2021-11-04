@@ -1,196 +1,282 @@
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ultra-3665/inversion.cc/main/ui"))()
+local Wait = library.subs.Wait -- Only returns if the GUI has not been terminated. For 'while Wait() do' loops
 
-local library = loadstring(game:GetObjects("rbxassetid://7657867786")[1].Source)()
-_G.Key = "BVA1zlUVLr6ViPvCX%R)"
 
-local keys = {
-    "BVA1zlUVLr6ViPvCX%R)",
-    "Key2",
-    "key3"
+-- // Dependencies
+local Aiming = loadstring(game:HttpGet("https://raw.githubusercontent.com/ultra-3665/inversion-silent-aim/main/silent%20aim"))()
+Aiming.TeamCheck(false)
+
+-- // Servicesw
+local Workspace = game:GetService("Workspace")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+
+
+-- // Vars
+local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
+local CurrentCamera = Workspace.CurrentCamera
+
+local DaHoodSettings = {
+    SilentAim = false,
+    Prediction = 0.165,
 }
+getgenv().DaHoodSettings = DaHoodSettings
 
-local counter = 1
-local keyCheck
-for i,v in pairs(keys) do
-    if counter == #keys then
-    --not whitelisted!
-    keys = ""
-    game.Players.LocalPlayer:Kick("Not a valid key!")
-    else
-        if v == _G.Key then
-            --Whitelisted!
+
+-- // Overwrite to account downed
+function Aiming.Check()
+    -- // Check A
+    if not (Aiming.Enabled == true and Aiming.Selected ~= LocalPlayer and Aiming.SelectedPart ~= nil) then
+        return false
+    end
+
+    -- // Check if downed
+    local Character = Aiming.Character(Aiming.Selected)
+    local KOd = Character:WaitForChild("BodyEffects")["K.O"].Value
+    local Grabbed = Character:FindFirstChild("GRABBING_CONSTRAINT") ~= nil
+
+    -- // Check B
+    if (KOd or Grabbed) then
+        return false
+    end
+
+    -- //
+    return true
+end
+
+-- // Hook
+local __index
+__index = hookmetamethod(game, "__index", function(t, k)
+    -- // Check if it trying to get our mouse's hit or target and see if we can use it
+    if (t:IsA("Mouse") and (k == "Hit" or k == "Target") and Aiming.Check()) then
+        -- // Vars
+        local SelectedPart = Aiming.SelectedPart
+
+        -- // Hit/Target
+        if (DaHoodSettings.SilentAim and (k == "Hit" or k == "Target")) then
+            -- // Hit to account prediction
+            local Hit = SelectedPart.CFrame + (SelectedPart.Velocity * DaHoodSettings.Prediction)
+
+            -- // Return modded val
+            return (k == "Hit" and Hit or SelectedPart)
+        end
+    end
+
+    -- // Return
+    return __index(t, k)
+end)
+
+
+
 
 
 local PepsisWorld = library:CreateWindow({
-Name = "Pepsi's World",
+Name = "inversion.cc",
 Themeable = {
-Info = "Discord Server: VzYTJ7Y"
+Info = "da hood legit cheat"
 }
 })
 
 local GeneralTab = PepsisWorld:CreateTab({
-Name = "General"
+Name = "Legit"
 })
+
+local VisualTab = PepsisWorld:CreateTab({
+    Name = "Visual"
+    })
+    
+
+local MiscTab = PepsisWorld:CreateTab({
+    Name = "Misc"
+    })
+
 local FarmingSection = GeneralTab:CreateSection({
-Name = "Farming"
-})
-FarmingSection:AddToggle({
-Name = "EXP Grinder",
-Flag = "FarmingSection_EXPGrinder"
-})
-FarmingSection:AddToggle({
-Name = "Trick Spammer",
-Flag = "FarmingSection_TrickSpammer",
-Keybind = 1,
-Callback = print
-})
-FarmingSection:AddSlider({
-Name = "Trick Rate",
-Flag = "FarmingSection_TrickRate",
-Value = 0.15,
-Precise = 2,
-Min = 0,
-Max = 1
-})
-FarmingSection:AddToggle({
-Name = "TP To Coins",
-Flag = "FarmingSection_TPCoins"
-})
-FarmingSection:AddToggle({
-Name = "Collect Coins",
-Flag = "FarmingSection_CollectCoins",
-Callback = print
-})
-FarmingSection:AddSlider({
-Name = "Coin Distance",
-Flag = "FarmingSection_CoinDistance",
-Value = 175,
-Min = 0,
-Max = 200,
-Format = function(Value)
-if Value == 0 then
-return "Collection Distance: Infinite"
-else
-return "Collection Distance: " .. tostring(Value)
-end
-end
+Name = "Silent Aim"
 })
 
 local BoardControlSection = GeneralTab:CreateSection({
-Name = "Board Control"
-})
-BoardControlSection:AddToggle({
-Name = "Anti Trip/Ragdoll",
-Flag = "BoardControlSection_AntiTripRagdoll",
-Callback = print
-})
-BoardControlSection:AddToggle({
-Name = "No Wear & Tear",
-Flag = "BoardControlSection_NoWearTear"
-})
-BoardControlSection:AddToggle({
-Name = "No Trick Cooldown",
-Flag = "BoardControlSection_NoTrickCooldown",
-Callback = print
-})
-BoardControlSection:AddToggle({
-Name = "Extend Combo Timout",
-Flag = "BoardControlSection_ExtendComboTimeout"
-})
-BoardControlSection:AddSlider({
-Name = "Timeout Extension",
-Flag = "BoardControlSection_CoinDistance",
-Value = 3,
+    Name = "Fov Settings"
+    })
+
+    local MiscSection = MiscTab:CreateSection({
+        Name = "Misc"
+        })
+
+
+FarmingSection:AddToggle({
+Name = "Silent Aim",
+Keybind = 1,
+Callback = function(value)
+getgenv().DaHoodSettings.SilentAim = value
+end
+   })
+
+FarmingSection:AddSlider({
+Name = "Prediction",
+Value = 0,
+Precise = 3,
 Min = 0,
-Max = 20,
-Format = function(Value)
-if Value == 0 then
-return "Combo Timeout: Never"
-else
-return "Combo Timeout: " .. tostring(Value) .. "s"
+Max = 0.500,
+Callback = function(value)
+    getgenv().DaHoodSettings.Prediction = value
 end
-end
-})
+ })
 
-local MiscSection = GeneralTab:CreateSection({
-Name = "Misc",
-Side = "Right"
-})
-MiscSection:AddToggle({
-Name = "Unlock Gamepasses",
-Flag = "MiscSection_UnlockGamepasses",
-Callback = print
-})
-MiscSection:AddToggle({
-Name = "Auto Compete",
-Flag = "MiscSection_AutoCompete",
-Callback = print
-})
-MiscSection:AddButton({
-Name = "Repair Board",
-Callback = function()
-print("Fixed")
+ FarmingSection:AddDropdown({
+    Name = "HitPart",
+    List = {
+        "Head","UpperTorso","LowerTorso","HumanoidRootPart"
+        },
+Callback = function(String)
+Aiming.TargetPart = String
 end
-})
-MiscSection:AddKeybind({
-Name = "Test Key",
-Callback = print
-})
-MiscSection:AddToggle({
-Name = "Test Toggle/Key",
-Keybind = {
-Mode = "Dynamic" -- Dynamic means to use the 'hold' method, if the user keeps the button pressed for longer than 0.65 seconds; else use toggle method
-},
-Callback = print
-})
+    })
 
-local FunSection = GeneralTab:CreateSection({
-Name = "Fun Cosmetics"
-})
-FunSection:AddToggle({
-Name = "Ragdoll Assumes Flight",
-Flag = "FunSection_AssumesFlight"
-})
-FunSection:AddToggle({
-Name = "Ragdoll On Player Collision",
-Flag = "FunSection_RagdollOnPlayerCollision"
-})
-FunSection:AddToggle({
-Name = "Un-Ragdoll When Motionless",
-Flag = "FunSection_UnRagdollWhenMotionless"
-})
-FunSection:AddToggle({
-Name = "Extend Ragdoll Duration",
-Flag = "FunSection_ExtendRagdollDuration"
-})
-FunSection:AddSlider({
-Name = "Coin Distance",
-Flag = "FarmingSection_Coin Distance",
-Value = 4,
-Min = 0,
-Max = 60,
-Textbox = true,
-Format = function(Value)
-if Value == 0 then
-return "Ragdoll Extension: Indefinite"
-else
-return "Ragdoll Extension: " .. tostring(Value) .. "s"
-end
-end
-})
-
-            keyCheck = _G.Key
-            keys = ""
-        else
-            counter = counter +1
+    FarmingSection:AddToggle({
+        Name = "Visible Check",
+        Callback = function(value)
+            getgenv().Aiming.VisibleCheck = value
         end
-    end
-end
+           })
 
-while true do
-    if _G.Key == keyCheck then
-        --Not spoofed
-    else
-        game.Players.LocalPlayer:Kick("Not a valid key!")
-    end
-    wait()
+BoardControlSection:AddToggle({
+Name = "Show Fov",
+Callback = function(value)
+    getgenv().Aiming.ShowFOV = value
 end
+  })
+  
+  BoardControlSection:AddSlider({
+    Name = "Fov Size",
+    Value = 0,
+    Min = 0,
+    Max = 500,
+    Callback = function(value)
+        getgenv().Aiming.FOV = value
+    end
+     })
+
+     BoardControlSection:AddColorpicker({
+        Name = "Fov Circle Color",
+        Color = Color3.new(255,255,255),
+        Callback = function(HC)
+     getgenv().Aiming.FOVColour = HC
+        end
+        })
+            
+      MiscSection:AddButton({
+        Name = "Fly",
+         Callback = function()
+            local plr = game.Players.LocalPlayer
+            local mouse = plr:GetMouse()
+            
+            localplayer = plr
+            
+            if workspace:FindFirstChild("Core") then
+            workspace.Core:Destroy()
+            end
+            
+            local Core = Instance.new("Part")
+            Core.Name = "Core"
+            Core.Size = Vector3.new(0.05, 0.05, 0.05)
+            
+            spawn(function()
+            Core.Parent = workspace
+            local Weld = Instance.new("Weld", Core)
+            Weld.Part0 = Core
+            Weld.Part1 = localplayer.Character.LowerTorso
+            Weld.C0 = CFrame.new(0, 0, 0)
+            end)
+            
+            workspace:WaitForChild("Core")
+            
+            local torso = workspace.Core
+            flying = false
+            local speed=10
+            local keys={a=false,d=false,w=false,s=false}
+            local e1
+            local e2
+            local function start()
+            local pos = Instance.new("BodyPosition",torso)
+            local gyro = Instance.new("BodyGyro",torso)
+            pos.Name="EPIXPOS"
+            pos.maxForce = Vector3.new(math.huge, math.huge, math.huge)
+            pos.position = torso.Position
+            gyro.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+            gyro.cframe = torso.CFrame
+            repeat
+            wait()
+            localplayer.Character.Humanoid.PlatformStand=true
+            local new=gyro.cframe - gyro.cframe.p + pos.position
+            if not keys.w and not keys.s and not keys.a and not keys.d then
+            speed=5
+            end
+            if keys.w then
+            new = new + workspace.CurrentCamera.CoordinateFrame.lookVector * speed
+            speed=speed+0
+            end
+            if keys.s then
+            new = new - workspace.CurrentCamera.CoordinateFrame.lookVector * speed
+            speed=speed+0
+            end
+            if keys.d then
+            new = new * CFrame.new(speed,0,0)
+            speed=speed+0
+            end
+            if keys.a then
+            new = new * CFrame.new(-speed,0,0)
+            speed=speed+0
+            end
+            if speed>10 then
+            speed=5
+            end
+            pos.position=new.p
+            if keys.w then
+            gyro.cframe = workspace.CurrentCamera.CoordinateFrame*CFrame.Angles(-math.rad(speed*0),0,0)
+            elseif keys.s then
+            gyro.cframe = workspace.CurrentCamera.CoordinateFrame*CFrame.Angles(math.rad(speed*0),0,0)
+            else
+            gyro.cframe = workspace.CurrentCamera.CoordinateFrame
+            end
+            until flying == false
+            if gyro then gyro:Destroy() end
+            if pos then pos:Destroy() end
+            flying=false
+            localplayer.Character.Humanoid.PlatformStand=false
+            speed=10
+            end
+            e1=mouse.KeyDown:connect(function(key)
+            if not torso or not torso.Parent then flying=false e1:disconnect() e2:disconnect() return end
+            if key=="w" then
+            keys.w=true
+            elseif key=="s" then
+            keys.s=true
+            elseif key=="a" then
+            keys.a=true
+            elseif key=="d" then
+            keys.d=true
+            elseif key=="x" then
+            if flying==true then
+            flying=false
+            else
+            flying=true
+            start()
+            end
+            end
+            end)
+            e2=mouse.KeyUp:connect(function(key)
+            if key=="w" then
+            keys.w=false
+            elseif key=="s" then
+            keys.s=false
+            elseif key=="a" then
+            keys.a=false
+            elseif key=="d" then
+            keys.d=false
+            end
+            end)
+            start()        
+         end
+     })
