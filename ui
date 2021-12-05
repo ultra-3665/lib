@@ -3400,7 +3400,7 @@ function library:CreateWindow(name, size, hidebutton)
         function tab:CreateConfigSystem(side)
             local configSystem = { }
 
-            configSystem.configFolder = "window.name"
+            configSystem.configFolder = "ultra-ware"
             if (not isfolder(configSystem.configFolder)) then
                 makefolder(configSystem.configFolder)
             end
@@ -3421,7 +3421,7 @@ function library:CreateWindow(name, size, hidebutton)
                     Config:Remove(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", ""))
                 end
 
-                if ConfigName:Get() and ConfigName:Get() ~= "ultra-ware" then
+                if ConfigName:Get() and ConfigName:Get() ~= "" then
                     local config = {}
     
                     for i,v in pairs(library.flags) do
