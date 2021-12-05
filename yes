@@ -217,7 +217,7 @@ end
 function library:CreateWindow(name, size, hidebutton)
     local window = { }
 
-    window.name = name or "ultra-ware"
+    window.name = name or ""
     window.size = UDim2.fromOffset(size.X, size.Y) or UDim2.fromOffset(492, 598)
     window.hidebutton = hidebutton or Enum.KeyCode.RightShift
     window.theme = library.theme
@@ -3421,7 +3421,7 @@ function library:CreateWindow(name, size, hidebutton)
                     Config:Remove(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", ""))
                 end
 
-                if ConfigName:Get() and ConfigName:Get() ~= "" then
+                if ConfigName:Get() and ConfigName:Get() ~= "ultra-ware" then
                     local config = {}
     
                     for i,v in pairs(library.flags) do
